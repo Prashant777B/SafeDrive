@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables from .env file
+  await dotenv.load(fileName: '.env');
+
   await Supabase.initialize(
-    url:
-        'https://hlnovbipawtmseugrluw.supabase.co', // Replace with your Supabase URL
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsbm92YmlwYXd0bXNldWdybHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTM4ODEsImV4cCI6MjA4ODcyOTg4MX0.pyLqO4pA8chopKpqPDXwgr7I2v_7fCGigIscyJMAN8g', // Replace with your Supabase anon key
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   runApp(const SafeDriveApp());
