@@ -1,4 +1,8 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(flutter analyze *)",
@@ -18,7 +22,9 @@
       "Bash(dir \"C:\\\\src\\\\flutter\")",
       "Bash(dir \"C:\\\\Users\\\\Prashant\\\\flutter\")",
       "Skill(update-config)",
-      "Skill(update-config:*)"
+      "Skill(update-config:*)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
