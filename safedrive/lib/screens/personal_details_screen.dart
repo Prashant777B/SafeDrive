@@ -77,20 +77,22 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
           _postcodeError = null;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white, size: 18),
-                const SizedBox(width: 8),
-                Text('Postcode found: ${result['admin_district']}'),
-              ],
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.white, size: 18),
+                  const SizedBox(width: 8),
+                  Text('Postcode found: ${result['admin_district']}'),
+                ],
+              ),
+              backgroundColor: const Color(0xFF34A853),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
             ),
-            backgroundColor: const Color(0xFF34A853),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+          );
+        }
       } else {
         setState(() {
           _postcodeError = 'Postcode not found. Please check and try again.';
@@ -153,12 +155,12 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
         foregroundColor: Colors.white,
         title: const Text('Personal Details',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4),
           child: LinearProgressIndicator(
             value: 0.5,
             backgroundColor: Colors.white30,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         ),
       ),

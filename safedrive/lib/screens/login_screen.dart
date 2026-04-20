@@ -170,11 +170,13 @@ class _LoginScreenState extends State<LoginScreen>
                   );
                 }
               } on AuthException catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(e.message),
-                      behavior: SnackBarBehavior.floating),
-                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(e.message),
+                        behavior: SnackBarBehavior.floating),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Load environment variables from .env file
   await dotenv.load(fileName: '.env');
-
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-
   runApp(const SafeDriveApp());
 }
 
@@ -34,13 +32,22 @@ class SafeDriveApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      home: const AuthGate(),
+      home: const SplashScreen(),
     );
   }
 }
 
-class AuthGate extends StatelessWidget {
+/// Root auth gate — shown after the splash screen.
+/// Uses a local flag so onboarding shows once per app session.
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool _hasSeenOnboarding = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +57,11 @@ class AuthGate extends StatelessWidget {
         final session = Supabase.instance.client.auth.currentSession;
         if (session != null) {
           return const HomeScreen();
+        }
+        if (!_hasSeenOnboarding) {
+          return OnboardingScreen(
+            onComplete: () => setState(() => _hasSeenOnboarding = true),
+          );
         }
         return const LoginScreen();
       },
