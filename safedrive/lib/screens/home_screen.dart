@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'personal_details_screen.dart';
 
-// ═══════════════════════════════════════════════════════════
 // ROOT SHELL — bottom navigation
-// ═══════════════════════════════════════════════════════════
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -57,9 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // TAB 1 — DASHBOARD
-// ═══════════════════════════════════════════════════════════
+
 class _DashboardTab extends StatelessWidget {
   const _DashboardTab();
 
@@ -521,9 +519,8 @@ class _DashboardTab extends StatelessWidget {
       );
 }
 
-// ═══════════════════════════════════════════════════════════
 // TAB 2 — MY QUOTES
-// ═══════════════════════════════════════════════════════════
+
 class _MyQuotesTab extends StatefulWidget {
   const _MyQuotesTab();
 
@@ -627,9 +624,8 @@ class _MyQuotesTabState extends State<_MyQuotesTab> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // TAB 3 — PROFILE
-// ═══════════════════════════════════════════════════════════
+
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab();
 
