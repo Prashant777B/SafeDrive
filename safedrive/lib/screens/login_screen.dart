@@ -226,18 +226,11 @@ class _LoginScreenState extends State<LoginScreen>
                     padding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
                     child: Column(
                       children: [
-                        Container(
+                        Image.asset(
+                          'assets/app_logo.png',
                           width: 70,
                           height: 70,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.5),
-                                width: 1.5),
-                          ),
-                          child: const Icon(Icons.shield,
-                              color: Colors.white, size: 38),
+                          fit: BoxFit.contain,
                         ),
                         const SizedBox(height: 12),
                         const Text(

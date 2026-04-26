@@ -117,29 +117,11 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
+                    Image.asset(
+                      'assets/app_logo.png',
                       width: 118,
                       height: 118,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(34),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.45),
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.3),
-                            blurRadius: 50,
-                            offset: const Offset(0, 18),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.shield,
-                        color: Colors.white,
-                        size: 64,
-                      ),
+                      fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 30),
                     const Text(
@@ -208,7 +190,8 @@ class _SplashScreenState extends State<SplashScreen>
           const SizedBox(width: 4),
           Text(
             label,
-            style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500),
           ),
         ],
       ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/constants.dart';
 import 'personal_details_screen.dart';
+import 'my_policies_screen.dart';
+import 'claims_screen.dart';
 
 // ROOT SHELL — bottom navigation
 
@@ -24,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: const [
           _DashboardTab(),
           _MyQuotesTab(),
+          MyPoliciesScreen(),
           _ProfileTab(),
         ],
       ),
@@ -43,7 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
             icon: Icon(Icons.receipt_long_outlined),
             selectedIcon: Icon(Icons.receipt_long, color: Color(0xFF1A73E8)),
-            label: 'My Quotes',
+            label: 'Quotes',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.policy_outlined),
+            selectedIcon: Icon(Icons.policy, color: Color(0xFF1A73E8)),
+            label: 'Policies',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
@@ -75,11 +84,11 @@ class _DashboardTab extends StatelessWidget {
         backgroundColor: const Color(0xFF1A73E8),
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.shield, size: 22),
-            SizedBox(width: 8),
-            Text('SafeDrive',
+            Image.asset('assets/app_logo.png', height: 28, fit: BoxFit.contain),
+            const SizedBox(width: 8),
+            const Text('SafeDrive',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ],
         ),
@@ -257,6 +266,53 @@ class _DashboardTab extends StatelessWidget {
             ),
 
             Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Quick Actions ────────────────────────────
+                  const _SectionHeader(
+                    title: 'Quick Actions',
+                    subtitle: 'Manage your insurance in one tap',
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _QuickActionCard(
+                          icon: Icons.policy_outlined,
+                          title: 'My Policies',
+                          subtitle: 'View & manage active cover',
+                          color: AppColors.primary,
+                          onTap: () {
+                            final shell = context
+                                .findAncestorStateOfType<_HomeScreenState>();
+                            shell?.switchTab(2);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _QuickActionCard(
+                          icon: Icons.report_problem_outlined,
+                          title: 'Make a Claim',
+                          subtitle: 'Submit & track your claims',
+                          color: AppColors.warning,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const ClaimsScreen()),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+
+            Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,14 +417,14 @@ class _DashboardTab extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.shield, color: Colors.white, size: 22),
-                            SizedBox(width: 8),
-                            Text(
+                            Image.asset('assets/app_logo.png', height: 22, fit: BoxFit.contain),
+                            const SizedBox(width: 8),
+                            const Text(
                               'Why Choose SafeDrive?',
                               style: TextStyle(
                                 color: Colors.white,
@@ -378,24 +434,24 @@ class _DashboardTab extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 18),
-                        _WhyItem(
+                        const SizedBox(height: 18),
+                        const _WhyItem(
                           icon: Icons.speed_outlined,
                           text: 'Instant quote in under 3 minutes',
                         ),
-                        _WhyItem(
+                        const _WhyItem(
                           icon: Icons.lock_outline,
                           text: 'Bank-grade encrypted data protection',
                         ),
-                        _WhyItem(
+                        const _WhyItem(
                           icon: Icons.thumb_up_alt_outlined,
                           text: 'No hidden fees — fully transparent pricing',
                         ),
-                        _WhyItem(
+                        const _WhyItem(
                           icon: Icons.support_agent_outlined,
                           text: 'UK-based customer support, 8am–8pm',
                         ),
-                        _WhyItem(
+                        const _WhyItem(
                           icon: Icons.savings_outlined,
                           text: 'No-claims discount up to 55% off',
                         ),
@@ -772,6 +828,26 @@ class _ProfileTab extends StatelessWidget {
                         shell?.switchTab(1);
                       },
                     ),
+                    _MenuItem(
+                      icon: Icons.policy_outlined,
+                      title: 'My Policies',
+                      subtitle: 'View active & past policies',
+                      onTap: () {
+                        final shell =
+                            context.findAncestorStateOfType<_HomeScreenState>();
+                        shell?.switchTab(2);
+                      },
+                    ),
+                    _MenuItem(
+                      icon: Icons.report_problem_outlined,
+                      title: 'Submit a Claim',
+                      subtitle: 'Report an incident or track claims',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ClaimsScreen()),
+                      ),
+                    ),
                   ]),
                   const SizedBox(height: 20),
                   _menuSection('Support & Legal', [
@@ -891,6 +967,66 @@ class _ProfileTab extends StatelessWidget {
 // ═══════════════════════════════════════════════════════════
 // SHARED WIDGETS
 // ═══════════════════════════════════════════════════════════
+
+class _QuickActionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.15),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(height: 12),
+            Text(title,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 14)),
+            const SizedBox(height: 3),
+            Text(subtitle,
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
+                    height: 1.3)),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _SectionHeader extends StatelessWidget {
   final String title;

@@ -1,11 +1,11 @@
 {
-    "name": "safedrive",
-    "short_name": "safedrive",
+    "name": "SafeDrive",
+    "short_name": "SafeDrive",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1A73E8",
+    "theme_color": "#1A73E8",
+    "description": "UK car insurance quotes in under 3 minutes.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/constants.dart';
+import 'policy_confirmation_screen.dart';
 
 class QuoteScreen extends StatefulWidget {
   final Map<String, String> personalDetails;
@@ -640,6 +642,46 @@ class _QuoteScreenState extends State<QuoteScreen>
                 ),
               ),
               const SizedBox(height: 10),
+
+              // ── Purchase Policy ───────────────────────────
+              if (_saved)
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PolicyConfirmationScreen(
+                          personalDetails: widget.personalDetails,
+                          carDetails: widget.carDetails,
+                          annualPremium: _annualQuote,
+                          monthlyPremium: _monthlyQuote,
+                        ),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.shield_rounded, size: 20),
+                        SizedBox(width: 8),
+                        Text('Purchase This Policy',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
+                        SizedBox(width: 6),
+                        Icon(Icons.arrow_forward_rounded, size: 18),
+                      ],
+                    ),
+                  ),
+                ),
+              if (_saved) const SizedBox(height: 10),
 
               // ── Start over ────────────────────────────────
               SizedBox(

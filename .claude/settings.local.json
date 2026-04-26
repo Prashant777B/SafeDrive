@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd /c \"mkdir C:\\\\Users\\\\Prashant\\\\Desktop\\\\SafeDrive1\\\\safedrive\\\\lib\\\\utils 2>nul & mkdir C:\\\\Users\\\\Prashant\\\\Desktop\\\\SafeDrive1\\\\supabase 2>nul\")"
+    ]
+  }
+}
