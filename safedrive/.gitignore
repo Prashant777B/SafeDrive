@@ -30,9 +30,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-# Ignore native build outputs but allow Flutter web build for Vercel
-/build/*
-!/build/web
+# Build outputs — CI/CD pipeline builds web automatically, no need to commit
+/build/
 /coverage/
 
 # Symbolication related
@@ -48,3 +47,5 @@ app.*.map.json
 
 #API keys and secrets
 .env
+.vercel
+.env*.local
