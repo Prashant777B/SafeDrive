@@ -25,14 +25,14 @@ A fully interactive Flutter application that allows UK drivers to get instant, r
 
 | Feature | Description |
 |---|---|
-| 🔐 Auth | Email/password sign-up and sign-in via Supabase Auth |
-| 🛡️ Onboarding | Animated 3-slide onboarding on first launch |
-| 💬 Instant Quotes | UK-realistic premium calculation based on 10+ risk factors |
-| 📋 Policy Purchase | Convert a saved quote into an active policy with one tap |
-| 📂 My Policies | View, filter and cancel active/expired policies |
-| 🚨 Claims | Submit new claims with incident details and track status progress |
-| 👤 Profile | Account management, password reset, sign-out |
-| 🗄️ Supabase Backend | PostgreSQL database with Row Level Security (RLS) |
+|  Auth | Email/password sign-up and sign-in via Supabase Auth |
+|  Onboarding | Animated 3-slide onboarding on first launch |
+|  Instant Quotes | UK-realistic premium calculation based on 10+ risk factors |
+|  Policy Purchase | Convert a saved quote into an active policy with one tap |
+|  My Policies | View, filter and cancel active/expired policies |
+|  Claims | Submit new claims with incident details and track status progress |
+|  Profile | Account management, password reset, sign-out |
+|  Supabase Backend | PostgreSQL database with Row Level Security (RLS) |
 
 ---
 
