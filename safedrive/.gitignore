@@ -30,8 +30,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-# Ignore all build outputs EXCEPT the Flutter web build (needed for Vercel)
-/build/
+# Ignore native build outputs but allow Flutter web build for Vercel
+/build/*
 !/build/web
 /coverage/
 
