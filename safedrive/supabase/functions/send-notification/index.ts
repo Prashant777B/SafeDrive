@@ -3,11 +3,18 @@
 //   • policies INSERT  → "Policy Activated" email
 //   • claims   INSERT  → "Claim Received"   email
 
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+import { serve } from "std/http/server.ts";
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
-const FROM_EMAIL     = 'SafeDrive <onboarding@resend.dev>';
-const APP_URL        = Deno.env.get('APP_URL') ?? 'https://safe-drive.vercel.app';
+const RESEND_API_KEY  = Deno.env.get('RESEND_API_KEY')!;
+const SUPABASE_URL    = Deno.env.get('SUPABASE_URL')!;
+const SERVICE_KEY     = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const FROM_EMAIL      = 'SafeDrive <onboarding@resend.dev>';
+const APP_URL         = Deno.env.get('APP_URL') ?? 'https://safe-drive.vercel.app';
+
+// resend.dev can only deliver to the Resend account owner's email.
+// DEMO_EMAIL overrides the recipient so notifications land in the demo inbox.
+// Set via: supabase secrets set DEMO_EMAIL=your@email.com
+const DEMO_EMAIL = Deno.env.get('DEMO_EMAIL') ?? null;
 
 // ── HTML email templates ─────────────────────────────────────
 
@@ -226,31 +233,22 @@ serve(async (req: Request) => {
     let toEmail: string | null = null;
     let emailContent: { subject: string; html: string } | null = null;
 
-    if (table === 'policies') {
-      // Fetch user email from Supabase Auth
-      const supabaseUrl    = Deno.env.get('SUPABASE_URL')!;
-      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-      const userRes = await fetch(`${supabaseUrl}/auth/v1/admin/users/${record.user_id}`, {
-        headers: { 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` },
+    if (table === 'policies' || table === 'claims') {
+      const userRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${record.user_id}`, {
+        headers: { 'apikey': SERVICE_KEY, 'Authorization': `Bearer ${SERVICE_KEY}` },
       });
       const userData = await userRes.json();
       toEmail = userData?.email ?? null;
-      if (toEmail) emailContent = policyEmail(record);
-
-    } else if (table === 'claims') {
-      const supabaseUrl    = Deno.env.get('SUPABASE_URL')!;
-      const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-      const userRes = await fetch(`${supabaseUrl}/auth/v1/admin/users/${record.user_id}`, {
-        headers: { 'apikey': serviceRoleKey, 'Authorization': `Bearer ${serviceRoleKey}` },
-      });
-      const userData = await userRes.json();
-      toEmail = userData?.email ?? null;
-      if (toEmail) emailContent = claimEmail(record);
+      if (toEmail) emailContent = table === 'policies' ? policyEmail(record) : claimEmail(record);
     }
 
     if (!toEmail || !emailContent) {
       return new Response('No email to send', { status: 200 });
     }
+
+    // Use DEMO_EMAIL override if set (required when using resend.dev sender domain,
+    // which can only deliver to the Resend account owner's address).
+    const recipient = DEMO_EMAIL ?? toEmail;
 
     // Send via Resend
     const emailRes = await fetch('https://api.resend.com/emails', {
@@ -261,7 +259,7 @@ serve(async (req: Request) => {
       },
       body: JSON.stringify({
         from: FROM_EMAIL,
-        to: [toEmail],
+        to: [recipient],
         subject: emailContent.subject,
         html: emailContent.html,
       }),
@@ -274,7 +272,7 @@ serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: emailData }), { status: 500 });
     }
 
-    console.log(`Email sent to ${toEmail}:`, emailData.id);
+    console.log(`Email sent to ${recipient} (original: ${toEmail}):`, emailData.id);
     return new Response(JSON.stringify({ success: true, id: emailData.id }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

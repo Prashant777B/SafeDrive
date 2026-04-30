@@ -1,0 +1,7 @@
+{
+  "deno.enablePaths": [
+    "safedrive/supabase/functions"
+  ],
+  "deno.unstable": [],
+  "deno.path": "C:\\Users\\Prashant\\.deno\\bin\\deno.exe"
+}
