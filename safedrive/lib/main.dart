@@ -5,15 +5,75 @@ import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'screens/admin/admin_login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+
+  await dotenv.load(fileName: '.env', isOptional: true);
+  final supabaseUrl = dotenv.env['SUPABASE_URL'];
+  final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'];
+
+  if (supabaseUrl == null ||
+      supabaseUrl.isEmpty ||
+      supabaseAnonKey == null ||
+      supabaseAnonKey.isEmpty) {
+    runApp(const MissingConfigApp());
+    return;
+  }
+
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
   );
   runApp(const SafeDriveApp());
+}
+
+class MissingConfigApp extends StatelessWidget {
+  const MissingConfigApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SafeDrive',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1A73E8),
+          brightness: Brightness.light,
+        ),
+        useMaterial3: true,
+      ),
+      home: const Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.settings_outlined,
+                  size: 56,
+                  color: Color(0xFF1A73E8),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'SafeDrive needs Supabase credentials',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Create a .env file beside pubspec.yaml with SUPABASE_URL and SUPABASE_ANON_KEY, then restart the app.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class SafeDriveApp extends StatelessWidget {
@@ -33,6 +93,9 @@ class SafeDriveApp extends StatelessWidget {
         fontFamily: 'Roboto',
       ),
       home: const SplashScreen(),
+      routes: {
+        '/admin': (_) => const AdminLoginScreen(),
+      },
     );
   }
 }
